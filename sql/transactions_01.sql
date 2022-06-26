@@ -40,22 +40,3 @@ CREATE TABLE Order_Detail(
 );
 
 COMMIT;
-
-/* Below works when using xampp
-
-ALTER TABLE `order_header` 
-ADD FOREIGN KEY (`customer_id`) 
-REFERENCES `customer`(`customer_id`) 
-ON DELETE RESTRICT ON UPDATE RESTRICT;
-
-
-ALTER TABLE `order_detail` 
-ADD FOREIGN KEY (`order_header_id`) 
-REFERENCES `order_header`(`order_header_id`) 
-ON DELETE RESTRICT ON UPDATE RESTRICT; 
-
-ALTER TABLE `order_detail` 
-ADD FOREIGN KEY (`product_id`) 
-REFERENCES `product`(`product_id`) 
-ON DELETE RESTRICT ON UPDATE RESTRICT;*/
-
