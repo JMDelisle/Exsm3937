@@ -1,3 +1,4 @@
+START TRANSACTION;
 /* Query 01 */
 SELECT customer_name, COUNT(order_header_id)
 FROM customer 
@@ -22,27 +23,51 @@ ORDER BY SUM(order_qty) DESC, product_name ASC;
 
 /* Query 04 */
 SELECT order_header.order_header_id, product.product_name, order_detail.order_qty, customer.customer_name, order_header.order_date, order_header.total_price
-FROM order_header
-INNER JOIN product on order_header.product_name = product.product_name
-INNER JOIN order_detail on order_header.order_qty = order_detail.order_qty
-INNER JOIN customer on order_header.customer_id = customer.customer_name
+FROM product
+	INNER JOIN Order_Detail on Order_Detail.product_id = Product.product_id
+    INNER JOIN Order_Header ON Order_Header.order_header_id = Order_Detail.order_header_id
+    INNER JOIN Customer ON Customer.customer_id = Order_Header.customer_id
+    WHERE order_date BETWEEN '2022-01-01' AND '2022-01-07'
+    ORDER BY order_header_id;
 
+    /* Query 05 */
 
+SELECT
+    SUM(Order_Detail.order_qty) AS 'Number of Guitars Sold'
+FROM
+    Product
+    JOIN Order_Detail ON Order_Detail.product_id = Product.product_id
+WHERE
+    Product.product_name LIKE '%Guitar%';
+    
+    
+    
+    
+    
 
-SELECT order_header.order_header_id, product.product_name, order_detail.order_qty, customer.customer_name, order_header.order_date, order_header.total_price
-From Order_Header
-    INNER JOIN
+/*LAST QUESTION */
 
+UPDATE
+    Product
+SET
+    quantity_in_stock = Product.quantity_in_stock - (
+        SELECT
+            Order_Detail.order_qty
+        FROM
+            Order_Detail
+        WHERE
+            Order_Detail.order_header_id = 8
+            AND Order_Detail.product_id = 4
+    )
+WHERE
+    Product.product_id = 4 AND Product.product_name = 'Bass Guirat';
 
+UPDATE
+    Product
+SET
+    quantity_in_stock = Product.quantity_in_stock - (
+        SELECT
+            Order_Detail.order_qty
+        FROM
 
-
-
-SELECT order_header.order_header_id, product.product_name, order_detail.order_qty, customer.customer_name, order_header.order_date, order_header.total_price
-FROM order_header
-INNER JOIN product on order_header.product_name = product.product_name
-INNER JOIN order_detail on order_header.order_qty = order_detail.order_qty
-INNER JOIN customer on order_header.customer_id = customer.customer_name
-
-WHERE order_header.order_date =< 2022-01-07;
-
-/* Query 05 */
+        COMMIT;
